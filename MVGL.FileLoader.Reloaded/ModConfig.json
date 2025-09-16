@@ -1,0 +1,21 @@
+{
+  "ModId": "MVGL.FileLoader.Reloaded",
+  "ModName": "MVGL File Loader",
+  "ModAuthor": "RyoTune",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Description",
+  "ModDll": "MVGL.FileLoader.Reloaded.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "x86/MVGL.FileLoader.Reloaded.dll",
+  "ModR2RManagedDll64": "x64/MVGL.FileLoader.Reloaded.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "MVGL.FileLoader.Reloaded.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [ "reloaded.sharedlib.hooks", "Reloaded.Memory.SigScan.ReloadedII" ],
+  "OptionalDependencies": [],
+  "SupportedAppId": [],
+  "ProjectUrl": ""
+}
