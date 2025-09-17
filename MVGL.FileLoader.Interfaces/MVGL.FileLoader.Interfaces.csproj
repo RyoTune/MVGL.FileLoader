@@ -4,6 +4,11 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Version>1.0.0</Version>
+        <Authors>RyoTune</Authors>
+        <Description>API for MVGL File Loader, which allows mods to replace files in MVGL archives without unpacking/repacking.</Description>
+        <RepositoryUrl>https://github.com/RyoTune/MVGL.FileLoader</RepositoryUrl>
     </PropertyGroup>
 
 </Project>
