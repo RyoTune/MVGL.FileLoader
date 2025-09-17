@@ -51,11 +51,20 @@ public class Mod : ModBase, IExports
         if (!Project.IsModDependent(modConfig)) return;
 
         var modDir = _modLoader.GetDirectoryForModId(modConfig.ModId);
-        var digiDir = Path.Join(modDir, "mvgl-loader");
-        if (!Directory.Exists(digiDir)) return;
         
-        var numFiles = _registry.AddFolder(digiDir);
-        Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
+        var mvglDir = Path.Join(modDir, "mvgl-loader");
+        if (Directory.Exists(mvglDir))
+        {
+            var numFiles = _registry.AddFolder(mvglDir);
+            Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
+        }
+
+        var digiDir = Path.Join(modDir, "dsts-loader");
+        if (Directory.Exists(digiDir))
+        {
+            var numFiles = _registry.AddFolder(digiDir);
+            Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
+        }
     }
 
     public Type[] GetTypes() => [typeof(IMvglApi)];
