@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace MVGL.FileLoader.Reloaded;
 
 public class MvglModRegistry
 {
-    private readonly Dictionary<string, DstsFile> _dstsFiles = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _mvglFiles = new(StringComparer.OrdinalIgnoreCase);
 
     public int AddFolder(string folder)
     {
@@ -19,15 +21,13 @@ public class MvglModRegistry
 
     public void BindFile(string bindPath, string file)
     {
-        _dstsFiles[bindPath] = new(file, new FileInfo(file).Length);
+        _mvglFiles[bindPath] = file;
         Log.Debug($"Registered File: {file}\nPath: {bindPath}");
     }
 
-    public bool TryGetFile(string gameFile, out DstsFile dstsFile)
+    public bool TryGetFile(string gameFile, [NotNullWhen(true)]out string? modFile)
     {
-        if (_dstsFiles.TryGetValue(gameFile, out dstsFile)) return true;
+        if (_mvglFiles.TryGetValue(gameFile, out modFile)) return true;
         return false;
     }
-
-    public readonly record struct DstsFile(string Path, long Size);
 }

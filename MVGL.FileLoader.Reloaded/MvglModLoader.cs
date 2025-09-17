@@ -61,21 +61,23 @@ public unsafe class MvglModLoader
             Log.Debug($"{nameof(PackFileResource_ReadFile)} || File: {filePathStr}");
         }
         
-        if (_registry.TryGetFile(filePathStr, out var newFile))
+        if (_registry.TryGetFile(filePathStr, out var modFile))
         {
-            Log.Debug($"{nameof(PackFileResource_ReadFile)} || Replacing: {filePath}\nFile: {newFile}");
+            Log.Debug($"{nameof(PackFileResource_ReadFile)} || Replacing: {filePath}\nFile: {modFile}");
             
-            using var fs = new FileStream(newFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            if (ReadFile(fs.SafeFileHandle, buffer, (int)newFile.Size, out _, nint.Zero))
+            using var fs = new FileStream(modFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (ReadFile(fs.SafeFileHandle, buffer, (int)GetFileSize(modFile), out _, nint.Zero))
             {
                 return 1;
             }
             
-            Log.Error($"ReadFile failed.\nFile: {newFile.Path}");
+            Log.Error($"ReadFile failed.\nFile: {modFile}");
         }
 
         return _ReadFile.Hook!.OriginalFunction(filePath, buffer, size);
     }
+
+    private readonly Dictionary<string, long> _fileSizes = [];
 
     private nint GetFileSizeV1Impl(nint param_1, nint filePath, long* size, nint param_4, int param_5) => TrySetFileSize(filePath, size) ? 1 : _getFileSizeV1!.OriginalFunction(param_1, filePath, size, param_4, param_5);
 
@@ -86,10 +88,17 @@ public unsafe class MvglModLoader
         var filePathStr = Marshal.PtrToStringAnsi(filePath)!;
         if (_registry.TryGetFile(filePathStr, out var modFile))
         {
-            *size = modFile.Size;
+            *size = GetFileSize(modFile);
             return true;
         }
 
         return false;
+    }
+    
+    private long GetFileSize(string file)
+    {
+        if (_fileSizes.TryGetValue(file, out var prev)) return prev;
+        _fileSizes[file] = new FileInfo(file).Length;
+        return _fileSizes[file];
     }
 }
