@@ -55,6 +55,11 @@ jobs:
           fetch-depth: 0
           submodules: "true"
 
+      - name: Setup .NET Core SDK (5.0)
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+
       - name: Setup .NET Core SDK (9.0)
         uses: actions/setup-dotnet@v3
         with:
@@ -72,11 +77,6 @@ jobs:
       - name: Push Interfaces to Nuget
         if: env.IS_RELEASE == 'true'
         run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-      - name: Setup .NET Core SDK (5.0)
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
