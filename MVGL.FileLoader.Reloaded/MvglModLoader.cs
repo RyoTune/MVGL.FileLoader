@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using Reloaded.Hooks.Definitions;
@@ -63,21 +65,22 @@ public unsafe class MvglModLoader
         
         if (_registry.TryGetFile(filePathStr, out var modFile))
         {
-            Log.Debug($"{nameof(PackFileResource_ReadFile)} || Replacing: {filePath}\nFile: {modFile}");
-            
+            Log.Debug($"{nameof(PackFileResource_ReadFile)} || Replacing: {filePathStr}\nFile: {modFile}");
+
             using var fs = new FileStream(modFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             if (ReadFile(fs.SafeFileHandle, buffer, (int)GetFileSize(modFile), out _, nint.Zero))
             {
                 return 1;
             }
-            
-            Log.Error($"ReadFile failed.\nFile: {modFile}");
+
+            var error = new Win32Exception(Marshal.GetLastWin32Error());
+            Log.Error(error, $"ReadFile failed.\nFile: {modFile}");
         }
 
         return _ReadFile.Hook!.OriginalFunction(filePath, buffer, size);
     }
 
-    private readonly Dictionary<string, long> _fileSizes = [];
+    private readonly ConcurrentDictionary<string, long> _fileSizes = [];
 
     private nint GetFileSizeV1Impl(nint param_1, nint filePath, long* size, nint param_4, int param_5) => TrySetFileSize(filePath, size) ? 1 : _getFileSizeV1!.OriginalFunction(param_1, filePath, size, param_4, param_5);
 
