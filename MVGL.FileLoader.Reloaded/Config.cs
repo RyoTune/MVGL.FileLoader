@@ -8,6 +8,10 @@ public class Config : Configurable<Config>
     [DisplayName("Log Level")]
     [DefaultValue(LogLevel.Information)]
     public LogLevel LogLevel { get; set; } = LogLevel.Information;
+
+    [DisplayName("Developer Mode")]
+    [DefaultValue(false)]
+    public bool DevMode { get; set; } = false;
 }
 
 /// <summary>

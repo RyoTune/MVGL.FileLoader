@@ -1,22 +1,27 @@
 ﻿#if DEBUG
 using System.Diagnostics;
 #endif
+using MVGL.FileLoader.Interfaces;
 using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using MVGL.FileLoader.Reloaded.Template;
 using MVGL.FileLoader.Reloaded.Configuration;
+using Reloaded.Mod.Interfaces.Internal;
 
 namespace MVGL.FileLoader.Reloaded;
 
-public class Mod : ModBase
+public class Mod : ModBase, IExports
 {
     private readonly IModLoader _modLoader;
     private readonly IReloadedHooks? _hooks;
     private readonly ILogger _log;
     private readonly IMod _owner;
 
-    private Config _config;
+    public static Config Config = null!;
     private readonly IModConfig _modConfig;
+    private readonly MvglModRegistry _registry;
+    private readonly MvglModLoader _loader;
+    private readonly IMvglApi _api;
 
     public Mod(ModContext context)
     {
@@ -24,14 +29,36 @@ public class Mod : ModBase
         _hooks = context.Hooks;
         _log = context.Logger;
         _owner = context.Owner;
-        _config = context.Configuration;
+        Config = context.Configuration;
         _modConfig = context.ModConfig;
 #if DEBUG
         Debugger.Launch();
 #endif
         Project.Initialize(_modConfig, _modLoader, _log, true);
-        Log.LogLevel = _config.LogLevel;
+        Log.LogLevel = Config.LogLevel;
+
+        _registry = new();
+        _loader = new(_registry);
+        
+        _api = new MvglApi(_registry);
+        _modLoader.AddOrReplaceController(_owner, _api);
+        
+        _modLoader.ModLoaded += ModLoaded;
     }
+    
+    private void ModLoaded(IModV1 mod, IModConfigV1 modConfig)
+    {
+        if (!Project.IsModDependent(modConfig)) return;
+
+        var modDir = _modLoader.GetDirectoryForModId(modConfig.ModId);
+        var digiDir = Path.Join(modDir, "mvgl-loader");
+        if (!Directory.Exists(digiDir)) return;
+        
+        var numFiles = _registry.AddFolder(digiDir);
+        Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
+    }
+
+    public Type[] GetTypes() => [typeof(IMvglApi)];
 
     #region Standard Overrides
 
@@ -39,9 +66,9 @@ public class Mod : ModBase
     {
         // Apply settings from configuration.
         // ... your code here.
-        _config = configuration;
+        Config = configuration;
         _log.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
-        Log.LogLevel = _config.LogLevel;
+        Log.LogLevel = Config.LogLevel;
     }
 
     #endregion

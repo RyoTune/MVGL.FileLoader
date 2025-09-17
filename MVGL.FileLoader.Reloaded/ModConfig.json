@@ -13,7 +13,7 @@
   "IsLibrary": false,
   "ReleaseMetadataFileName": "MVGL.FileLoader.Reloaded.ReleaseMetadata.json",
   "PluginData": {},
-  "IsUniversalMod": false,
+  "IsUniversalMod": true,
   "ModDependencies": [ "reloaded.sharedlib.hooks", "Reloaded.Memory.SigScan.ReloadedII" ],
   "OptionalDependencies": [],
   "SupportedAppId": [],
