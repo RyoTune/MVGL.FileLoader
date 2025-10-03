@@ -36,7 +36,7 @@ public unsafe class MvglModLoader
         _ReadFile = new(ReadFileImpl);
         Project.Scans.AddScanHook("PackFileResource_GetFileSize", (result, hooks) =>
         {
-            if (Project.Inis.TryGetSetting<int>("settings", "PackFileResource_GetFileSize_Version", "hooks", out var version))
+            if (Project.Inis.TryGetSetting<int>("settings", "PackFileResource_GetFileSize_Version", "Hooks", out var version))
             {
                 switch (version)
                 {
@@ -57,10 +57,6 @@ public unsafe class MvglModLoader
         if (Mod.Config.DevMode)
         {
             Log.Information($"{nameof(PackFileResource_ReadFile)} || File: {filePathStr}");
-        }
-        else
-        {
-            Log.Debug($"{nameof(PackFileResource_ReadFile)} || File: {filePathStr}");
         }
         
         if (_registry.TryGetFile(filePathStr, out var modFile))
