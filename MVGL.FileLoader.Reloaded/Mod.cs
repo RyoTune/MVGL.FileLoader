@@ -40,31 +40,10 @@ public class Mod : ModBase, IExports
         _registry = new();
         _loader = new(_registry);
         
-        _api = new MvglApi(_registry);
+        _api = new MvglApi(_modLoader, _registry);
         _modLoader.AddOrReplaceController(_owner, _api);
         
-        _modLoader.ModLoaded += ModLoaded;
-    }
-    
-    private void ModLoaded(IModV1 mod, IModConfigV1 modConfig)
-    {
-        if (!Project.IsModDependent(modConfig)) return;
-
-        var modDir = _modLoader.GetDirectoryForModId(modConfig.ModId);
-        
-        var mvglDir = Path.Join(modDir, "mvgl-loader");
-        if (Directory.Exists(mvglDir))
-        {
-            var numFiles = _registry.AddFolder(mvglDir);
-            Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
-        }
-
-        var digiDir = Path.Join(modDir, "dsts-loader");
-        if (Directory.Exists(digiDir))
-        {
-            var numFiles = _registry.AddFolder(digiDir);
-            Log.Information($"Registered Mod: {modConfig.ModName} || Total Files: {numFiles}");
-        }
+        _api.AddProbingPath("mvgl-loader");
     }
 
     public Type[] GetTypes() => [typeof(IMvglApi)];

@@ -66,6 +66,12 @@ public unsafe class MvglModLoader
         if (_registry.TryGetFile(filePathStr, out var modFile))
         {
             Log.Debug($"{nameof(PackFileResource_ReadFile)} || Replacing: {filePathStr}\nFile: {modFile}");
+            
+            var modSize = GetFileSize(modFile);
+            if (size != modSize)
+            {
+                Log.Warning($"{nameof(PackFileResource_ReadFile)} || Incorrect size. Expected: {modSize}, Actual: {size}");
+            }
 
             using var fs = new FileStream(modFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             if (ReadFile(fs.SafeFileHandle, buffer, (int)GetFileSize(modFile), out _, nint.Zero))

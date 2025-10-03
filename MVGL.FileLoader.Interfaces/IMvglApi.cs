@@ -6,6 +6,13 @@ namespace MVGL.FileLoader.Interfaces;
 public interface IMvglApi
 {
     /// <summary>
+    /// Add a new folder to load files from in every mod, like the default <c>mvgl-loader</c>.
+    /// </summary>
+    /// <param name="path">Probe path.</param>
+    /// <returns>Amount of files loaded.</returns>
+    void AddProbingPath(string path);
+    
+    /// <summary>
     /// Add a folder to load files from.
     /// </summary>
     /// <param name="folder">Folder path.</param>
