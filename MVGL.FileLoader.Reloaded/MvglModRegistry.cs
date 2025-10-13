@@ -12,7 +12,18 @@ public class MvglModRegistry
         foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
         {
             var relPath = Path.GetRelativePath(folder, file).Replace('\\', '/');
-            BindFile(relPath, file);
+            
+            var isDdsFile = file.EndsWith(".dds");
+            if (isDdsFile)
+            {
+                // Bind DDS files as .img files.
+                BindFile(Path.ChangeExtension(relPath, ".img"), file);
+            }
+            else
+            {
+                BindFile(relPath, file);
+            }
+            
             numFiles++;
         }
 
