@@ -12,18 +12,7 @@ public class MvglModRegistry
         foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
         {
             var relPath = Path.GetRelativePath(folder, file).Replace('\\', '/');
-            
-            var isDdsFile = file.EndsWith(".dds");
-            if (isDdsFile)
-            {
-                // Bind DDS files as .img files.
-                BindFile(Path.ChangeExtension(relPath, ".img"), file);
-            }
-            else
-            {
-                BindFile(relPath, file);
-            }
-            
+            BindFile(relPath, file);
             numFiles++;
         }
 
@@ -39,6 +28,11 @@ public class MvglModRegistry
     public bool TryGetFile(string gameFile, [NotNullWhen(true)]out string? modFile)
     {
         if (_mvglFiles.TryGetValue(gameFile, out modFile)) return true;
+        
+        // For .img files, also allow DDS files.
+        if (gameFile.EndsWith(".img", StringComparison.OrdinalIgnoreCase) &&
+            _mvglFiles.TryGetValue(Path.ChangeExtension(gameFile, ".dds"), out modFile)) return true;
+        
         return false;
     }
 }
