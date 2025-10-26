@@ -6,7 +6,8 @@ using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using MVGL.FileLoader.Reloaded.Template;
 using MVGL.FileLoader.Reloaded.Configuration;
-using Reloaded.Mod.Interfaces.Internal;
+using MVGL.FileLoader.Reloaded.FileProcessors;
+using MVLibraryNET.Definitions;
 
 namespace MVGL.FileLoader.Reloaded;
 
@@ -44,9 +45,16 @@ public class Mod : ModBase, IExports
         _modLoader.AddOrReplaceController(_owner, _api);
         
         _api.AddProbingPath("mvgl-loader");
+
+        var cacheDir = Path.Join(_modLoader.GetDirectoryForModId(_modConfig.ModId), "cached",
+            _modLoader.GetAppConfig().AppId);
+        var mbeProc = new MbeProcessor(_api, cacheDir);
+        _registry.RegisterProcessor(mbeProc);
+        
+        _modLoader.OnModLoaderInitialized += () => _registry.ProcessFiles();
     }
 
-    public Type[] GetTypes() => [typeof(IMvglApi)];
+    public Type[] GetTypes() => [typeof(IMvglApi), typeof(IMVLibrary)];
 
     #region Standard Overrides
 
