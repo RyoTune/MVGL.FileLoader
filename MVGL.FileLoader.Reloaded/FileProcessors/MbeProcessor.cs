@@ -28,26 +28,47 @@ public class MbeProcessor : IFileProcessor
     
     public void Process(IReadOnlyList<HandledFile> files)
     {
+        var appendTasks = new List<Action>();
         foreach (var file in files)
         {
             var mbePath = Path.GetDirectoryName(file.InitialBindPath)!;
             if (!TryGetActiveMbe(mbePath, out var activeMbe))
                 continue;
 
-            var sheetName = Path.GetFileNameWithoutExtension(file.FilePath);
+            var sheetName = Path.GetFileName(file.InitialBindPath);
+            sheetName = sheetName[..sheetName.IndexOf('.')]; // Handle both SheetName.csv and SheetName.ap.csv
+            
             if (!activeMbe.BaseMbe.Sheets.TryGetValue(sheetName, out var ogSheet))
             {
                 Log.Error($"{nameof(MbeProcessor)} || Sheet '{sheetName}' not found in MBE '{mbePath}'.\nFile: {file.FilePath}");
                 continue;
             }
 
-            // Generate diff against original MBE.
-            var csvSheet = new Sheet(file.FilePath);
-            var diff = ogSheet.GenerateDiff(csvSheet);
+            if (IsAppendCsv(file.FilePath))
+            {
+                // We want to append after data merging as to not affect cell positions.
+                appendTasks.Add(() =>
+                {
+                    foreach (var row in File.ReadLines(file.FilePath).Skip(1)) // Skip header.
+                        activeMbe.CurrentMbe.Sheets[sheetName].AppendRow(row);
+                
+                    Log.Debug($"{nameof(MbeProcessor)} || Row(s) appended to '{sheetName}' in MBE '{mbePath}'.\nFile: {file.FilePath}");
+                });
+            }
+            else
+            {
+                // Generate diff against original MBE.
+                var csvSheet = new Sheet(file.FilePath);
+                var diff = ogSheet.GenerateDiff(csvSheet);
             
-            // Apply diff to current MBE.
-            activeMbe.CurrentMbe.Sheets[sheetName].MergeDiff(diff);
+                // Apply diff to current MBE.
+                activeMbe.CurrentMbe.Sheets[sheetName].MergeDiff(diff);
+                Log.Debug($"{nameof(MbeProcessor)} || Data merged into '{sheetName}' in MBE '{mbePath}'.\nFile: {file.FilePath}");
+            }
         }
+
+        // Append rows.
+        foreach (var append in appendTasks) append();
 
         // Write and bind MBEs.
         foreach (var (mbePath, value) in _activeMbes)
@@ -62,6 +83,8 @@ public class MbeProcessor : IFileProcessor
             _api.BindFile(mbePath, outputFile);
         }
     }
+
+    private static bool IsAppendCsv(string file) => file.EndsWith(".ap.csv", StringComparison.OrdinalIgnoreCase);
 
     private bool TryGetActiveMbe(string mbePath, [NotNullWhen(true)] out ActiveMbe? activeMbe)
     {

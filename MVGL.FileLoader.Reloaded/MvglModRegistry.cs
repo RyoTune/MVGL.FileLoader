@@ -37,7 +37,7 @@ public class MvglModRegistry
     public void BindFile(string bindPath, string file)
     {
         _mvglFiles[bindPath] = file;
-        Log.Debug($"Registered File: {file}\nPath: {bindPath}");
+        Log.Debug($"Registered file for path: {bindPath}\nFile: {file}");
     }
 
     public bool TryGetFile(string gameFile, [NotNullWhen(true)]out string? modFile)
