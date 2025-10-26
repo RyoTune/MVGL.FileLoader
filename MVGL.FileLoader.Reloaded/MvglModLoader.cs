@@ -53,7 +53,7 @@ public unsafe class MvglModLoader
 
     private byte ReadFileImpl(nint filePath, nint buffer, int size)
     {
-        var filePathStr = Marshal.PtrToStringAnsi(filePath)!;
+        var filePathStr = Marshal.PtrToStringAnsi(filePath)!.Replace('/', '\\');
         if (Mod.Config.DevMode)
         {
             Log.Information($"{nameof(PackFileResource_ReadFile)} || File: {filePathStr}");
@@ -90,7 +90,7 @@ public unsafe class MvglModLoader
 
     private bool TrySetFileSize(nint filePath, long* size)
     {
-        var filePathStr = Marshal.PtrToStringAnsi(filePath)!;
+        var filePathStr = Marshal.PtrToStringAnsi(filePath)!.Replace('/', '\\');
         if (_registry.TryGetFile(filePathStr, out var modFile))
         {
             *size = GetFileSize(modFile);
