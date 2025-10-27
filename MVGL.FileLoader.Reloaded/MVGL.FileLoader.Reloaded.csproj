@@ -46,7 +46,7 @@
 
     <ItemGroup>
         <PackageReference Include="FileEmulationFramework.Lib" Version="1.1.1" />
-        <PackageReference Include="MVLibraryNET" Version="1.1.3" />
+        <PackageReference Include="MVLibraryNET" Version="1.1.5" />
         <PackageReference Include="MVLibraryNET.Definitions" Version="1.1.1" />
         <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime"/>
         <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0"/>
