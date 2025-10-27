@@ -2,7 +2,7 @@
   "ModId": "MVGL.FileLoader.Reloaded",
   "ModName": "MVGL File Loader",
   "ModAuthor": "RyoTune",
-  "ModVersion": "1.3.3",
+  "ModVersion": "1.3.4",
   "ModDescription": "Allows mods to:\n- Replace files in MVGL archives without unpacking/repacking.\n- Edit data within MBE files with CSVs.",
   "ModDll": "MVGL.FileLoader.Reloaded.dll",
   "ModIcon": "Preview.png",

@@ -49,12 +49,15 @@ public class MbeProcessor : IFileProcessor
                 // We want to append after data merging as to not affect cell positions.
                 appendTasks.Add(() =>
                 {
-                    foreach (var row in File.ReadLines(file.FilePath).Skip(1)) // Skip header.
-                        activeMbe.CurrentMbe.Sheets[sheetName].AppendRow(row);
-                
+                    activeMbe.CurrentMbe.Sheets[sheetName].AppendCsv(File.ReadAllText(file.FilePath));
                     Log.Debug($"{nameof(MbeProcessor)} || Row(s) appended to '{sheetName}' in MBE '{mbePath}'.\nFile: {file.FilePath}");
                 });
             }
+            
+            // TODO: Currently probably not able to merge into appended mod data
+            //       since the diff will include all cell data in later mods, overwriting
+            //       anything already there.
+            //       Probably need to merge diffs into each other first, then into the current sheet.
             else
             {
                 // Generate diff against original MBE.
