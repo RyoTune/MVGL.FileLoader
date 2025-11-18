@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVGL.FileLoader.Reloaded", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVGL.FileLoader.Interfaces", "MVGL.FileLoader.Interfaces\MVGL.FileLoader.Interfaces.csproj", "{5D17FB25-2B1C-4F9D-B129-E5F525F2DD2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVLibraryNET.Definitions", "submodules\MVLibraryNET\MVLibraryNET.Definitions\MVLibraryNET.Definitions.csproj", "{EBA7E2F7-E1B0-471B-845D-189F78BAAE37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVLibraryNET", "submodules\MVLibraryNET\MVLibraryNET\MVLibraryNET.csproj", "{205015AE-C173-4ECB-AA31-57192645D076}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{5D17FB25-2B1C-4F9D-B129-E5F525F2DD2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D17FB25-2B1C-4F9D-B129-E5F525F2DD2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D17FB25-2B1C-4F9D-B129-E5F525F2DD2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBA7E2F7-E1B0-471B-845D-189F78BAAE37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBA7E2F7-E1B0-471B-845D-189F78BAAE37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBA7E2F7-E1B0-471B-845D-189F78BAAE37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBA7E2F7-E1B0-471B-845D-189F78BAAE37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{205015AE-C173-4ECB-AA31-57192645D076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{205015AE-C173-4ECB-AA31-57192645D076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{205015AE-C173-4ECB-AA31-57192645D076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{205015AE-C173-4ECB-AA31-57192645D076}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
