@@ -53,7 +53,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\MVLibraryNET\MVLibraryNET\MVLibraryNET.csproj" />
       <ProjectReference Include="..\MVGL.FileLoader.Interfaces\MVGL.FileLoader.Interfaces.csproj" />
+      <ProjectReference Include="..\submodules\MVLibraryNET\MVLibraryNET\MVLibraryNET.csproj" />
     </ItemGroup>
 </Project>
