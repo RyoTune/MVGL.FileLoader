@@ -1,11 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using MVGL.FileLoader.Interfaces;
 using MVGL.FileLoader.Interfaces.FileProcessors;
 using MVLibraryNET.MBE;
 
 namespace MVGL.FileLoader.Reloaded.FileProcessors;
 
-public class MbeProcessor : IFileProcessor
+public partial class MbeProcessor : IFileProcessor
 {
     private readonly IMvglApi _api;
     private readonly string _cacheDir;
@@ -35,9 +36,7 @@ public class MbeProcessor : IFileProcessor
             if (!TryGetActiveMbe(mbePath, out var activeMbe))
                 continue;
 
-            var sheetName = Path.GetFileName(file.InitialBindPath);
-            sheetName = sheetName[..sheetName.IndexOf('.')]; // Handle both SheetName.csv and SheetName.ap.csv
-            
+            var sheetName = GetSheetName(file.InitialBindPath);
             if (!activeMbe.BaseMbe.Sheets.TryGetValue(sheetName, out var ogSheet))
             {
                 Log.Error($"{nameof(MbeProcessor)} || Sheet '{sheetName}' not found in MBE '{mbePath}'.\nFile: {file.FilePath}");
@@ -121,5 +120,21 @@ public class MbeProcessor : IFileProcessor
         return true;
     }
 
+    private static string GetSheetName(string sheetFile)
+    {
+        var sheetName = Path.GetFileName(sheetFile);
+        sheetName = sheetName[..sheetName.IndexOf('.')]; // Handle both SheetName.csv and SheetName.ap.csv
+
+        if (SheetIdRegexGen().IsMatch(sheetName))
+        {
+            sheetName = sheetName[(sheetName.IndexOf('_') + 1)..];
+        }
+
+        return sheetName;
+    }
+
     private record ActiveMbe(Mbe BaseMbe, Mbe CurrentMbe);
+
+    [GeneratedRegex("^[0-9]*_")]
+    private static partial Regex SheetIdRegexGen();
 }
